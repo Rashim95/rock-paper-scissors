@@ -2,15 +2,40 @@
 const choices = ["ROCK", "PAPER", "SCISSORS"]
 let playerScore = 0;
 let computerScore = 0;
+const maxScore = 5;
+const result = document.getElementById('result');
 
 function getComputerChoice() {
     let randomIndex = Math.floor(Math.random()*3)
     return choices[randomIndex];
 }
 
+function disableButtons(){
+    rock.disabled = true;
+    paper.disabled = true;
+    scissors.disabled = true;
+}
+
+function updateScore() {
+    const displayScore = document.getElementById('score');
+    displayScore.textContent = `Player:${playerScore} Computer:${computerScore}`;
+
+    if (playerScore === maxScore) {
+        result.textContent = 'Congratulations! You Win the Game!'
+        disableButtons();
+    } else if (computerScore === maxScore) {
+        result.textContent = 'Computer Wins the Game!'
+        disableButtons();
+    }
+}
+
+
 function playRound(playerSelection, computerSelection) {
+
+    let resultMessage = "";
+
     if (playerSelection === computerSelection){
-        return "Tied"
+        resultMessage = "It's a Tie"
     }
 
     else if ( 
@@ -19,7 +44,7 @@ function playRound(playerSelection, computerSelection) {
     (playerSelection === "ROCK" && computerSelection === "SCISSORS") 
     ) {
         playerScore++;
-        return `You Won! ${playerSelection} beats ${computerSelection}`
+        resultMessage =  `You Win! ${playerSelection} beats ${computerSelection}`
     }
     else if (
     (playerSelection === "ROCK" && computerSelection === "PAPER") ||
@@ -27,32 +52,22 @@ function playRound(playerSelection, computerSelection) {
      (playerSelection === "PAPER" && computerSelection === "SCISSORS") 
     ) {
         computerScore++;
-        return `You Lose! ${computerSelection} beats ${playerSelection}`
+        resultMessage =  `You Lose! ${computerSelection} beats ${playerSelection}`
     }
+
+    result.textContent = resultMessage;
+    updateScore();
+}
+
+
+
+
+
+    const rock = document.getElementById('rock');
+    const paper = document.getElementById('paper');
+    const scissors = document.getElementById('scissors');
     
-    return "Invalid Selection! Please choose ROCK, PAPER, or SCISSORS."
 
-}
-
-function game() {
-    for (let i=1; i<6; i++){
-        let userInput = prompt(`Round ${i} : Enter your Choice from ROCK, PAPER & SCISSORS`)
-        let playerSelection = userInput.toUpperCase();
-        let computerSelection = getComputerChoice();
-        
-        let gameResult = playRound(playerSelection, computerSelection);
-        console.log(gameResult);
-    }
-
-
-    if (playerScore > computerScore) {
-    console.log( `You Win!! Player:${playerScore} Computer:${computerScore}`)
-    }
-    else if (computerScore > playerScore) {
-    console.log (`You Lose!! Player:${playerScore} Computer:${computerScore}`)
-    }
-    else console.log( `Tied!! Player:${playerScore} Computer:${computerScore}`)
-
-}
-
-game();
+    rock.addEventListener('click', () => playRound("ROCK", getComputerChoice()));
+    paper.addEventListener('click', () => playRound("PAPER", getComputerChoice()))
+    scissors.addEventListener('click', () => playRound("SCISSORS", getComputerChoice()))
